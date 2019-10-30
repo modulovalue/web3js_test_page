@@ -47,7 +47,7 @@ class _TestState extends State<Test> {
   void initState() {
     super.initState();
 
-    Timer.periodic(const Duration(seconds: 10), (timer) {
+    Timer.periodic(const Duration(seconds: 1), (timer) {
       /// check ethereum.js
       if (js.context.hasProperty("ethereum") != hasEthereum.isActive) {
         setState(() => hasEthereum =
