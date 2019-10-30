@@ -36342,7 +36342,7 @@ u=u[3]
 return Math.sqrt(t*t+s*s+r*r+u*u)}}
 F.Bh.prototype={
 S:function(a){var u=null
-return new S.ov(new F.q1(u),"Web3.js Test Page",X.P9(u,u,u,C.hG,u),u)}}
+return new S.ov(new F.q1(u),"Flutter Web Ethereum web3.js Test Page",X.P9(u,u,u,C.hG,u),u)}}
 F.q1.prototype={
 aP:function(){var u=[P.W],t=[P.i]
 return new F.Mg(new G.dc(u),new G.dc(u),new G.dc(t),new G.dc(t),C.p)}}
@@ -36352,7 +36352,7 @@ F.Mg.prototype={
 aQ:function(){this.be()
 P.S0(C.fv,new F.Mt(this))},
 S:function(a){var u,t,s=this,r=null,q=[N.b5],p=H.b([],q)
-for(u=U.ZD("Web3.js Test Page","web3js_test_page"),t=0;t<5;++t)p.push(u[t])
+for(u=U.ZD("Flutter Web Ethereum web3.js Test Page","web3js_test_page"),t=0;t<5;++t)p.push(u[t])
 p.push(C.rI)
 p.push(new T.ck(C.U,r,r,L.fQ(s.d.c_(0,!1)||s.e.c_(0,!1)?"Your browser supports web3":"Your browser doesn't support web3. \nPlease install MetaMask or a web3 capable browser.",r,C.bd),r))
 p.push(C.rJ)

@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Web3.js Test Page',
+      title: 'Flutter Web Ethereum web3.js Test Page',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -101,7 +101,7 @@ class _TestState extends State<Test> {
         child: ListView(
           shrinkWrap: true,
           children: [
-            ...modulovalueTitle("Web3.js Test Page", "web3js_test_page"),
+            ...modulovalueTitle("Flutter Web Ethereum web3.js Test Page", "web3js_test_page"),
             const SizedBox(height: 36.0),
             Center(
               child: Text(
