@@ -106,8 +106,8 @@ class _TestState extends State<Test> {
             Center(
               child: Text(
                 hasEthereum.isActive || hasWeb3.isActive
-                    ? "Your browser supports Web3"
-                    : "Your browser doesn't support Web3. \nPlease install MetaMask or a Web 3 capable browser.",
+                    ? "Your browser supports web3"
+                    : "Your browser doesn't support web3. \nPlease install MetaMask or a web3 capable browser.",
                 textAlign: TextAlign.center,
               ),
             ),
