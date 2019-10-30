@@ -84,18 +84,6 @@ class _TestState extends State<Test> {
     });
   }
 
-  void dialog(BuildContext context, Widget title, Widget content) {
-    showDialog<void>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: title,
-          content: content,
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
