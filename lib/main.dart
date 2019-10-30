@@ -1,8 +1,8 @@
 import 'dart:async';
+import 'dart:js' as js;
 
 import 'package:dartz/dartz.dart' hide State;
 import 'package:decimal/decimal.dart';
-import 'dart:js' as js;
 
 import 'package:flutter/material.dart';
 import 'package:modulovalue_project_widgets/all.dart';
@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Web3.js example',
+      title: 'Web3.js Test Page',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -46,38 +46,46 @@ class _TestState extends State<Test> {
   @override
   void initState() {
     super.initState();
-    Timer.periodic(Duration(seconds: 1), (timer) {
+
+    Timer.periodic(const Duration(seconds: 1), (timer) {
       /// check ethereum.js
-      if (js.context.hasProperty("ethereum") != hasEthereum.isActive)
+      if (js.context.hasProperty("ethereum") != hasEthereum.isActive) {
         setState(() => hasEthereum =
             some(MapEntry(DateTime.now(), js.context.hasProperty("ethereum"))));
+      }
 
       /// check web3.js
-      if (js.context.hasProperty("web3") != hasWeb3.isActive)
+      if (js.context.hasProperty("web3") != hasWeb3.isActive) {
         setState(() => hasWeb3 =
             some(MapEntry(DateTime.now(), js.context.hasProperty("web3"))));
+      }
 
       /// check network id
-      (js.context["web3"]["version"] as js.JsObject).callMethod("getNetwork", [
+      (js.context["web3"]["version"] as js.JsObject)
+          .callMethod("getNetwork", <dynamic>[
         js.allowInterop((dynamic err, dynamic netID) {
           if (!this.netID.hasValue ||
-              this.netID.valueOrNull != netID.toString())
+              this.netID.valueOrNull != netID.toString()) {
             setState(() =>
                 this.netID = some(MapEntry(DateTime.now(), netID.toString())));
+          }
         }),
       ]);
 
       /// get account
-      final _account = (js.context["web3"]["eth"]["accounts"] as js.JsArray)[0];
-      if (!account.hasValue || _account.toString() != account.valueOrNull) {
-        setState(() =>
-            account = some(MapEntry(DateTime.now(), _account.toString())));
+      final arr = js.context["web3"]["eth"]["accounts"] as js.JsArray;
+      if (arr.isNotEmpty) {
+        final dynamic _account = arr[0];
+        if (!account.hasValue || _account.toString() != account.valueOrNull) {
+          setState(() =>
+              account = some(MapEntry(DateTime.now(), _account.toString())));
+        }
       }
     });
   }
 
   void dialog(BuildContext context, Widget title, Widget content) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) {
         return AlertDialog(
@@ -95,37 +103,36 @@ class _TestState extends State<Test> {
         child: ListView(
           shrinkWrap: true,
           children: [
-            ...modulovalueTitle(
-                "Web3.js Test Page", "web3js_test_page"),
-            SizedBox(height: 36.0),
+            ...modulovalueTitle("Web3.js Test Page", "web3js_test_page"),
+            const SizedBox(height: 36.0),
             Center(
               child: Opacity(
                 opacity: 0.4,
                 child: Wrap(
                   spacing: 4.0,
                   children: <Widget>[
-                    Text("ethereum.js"),
+                    const Text("ethereum.js"),
                     Icon(hasEthereum.isActive ? Icons.check : Icons.remove,
                         size: 14),
                   ],
                 ),
               ),
             ),
-            SizedBox(height: 4.0),
+            const SizedBox(height: 4.0),
             Center(
               child: Opacity(
                 opacity: 0.4,
                 child: Wrap(
                   spacing: 4.0,
                   children: <Widget>[
-                    Text("web3.js"),
+                    const Text("web3.js"),
                     Icon(hasEthereum.isActive ? Icons.check : Icons.remove,
                         size: 14),
                   ],
                 ),
               ),
             ),
-            SizedBox(height: 4.0),
+            const SizedBox(height: 4.0),
             Center(
               child: Opacity(
                 opacity: 0.4,
@@ -138,7 +145,7 @@ class _TestState extends State<Test> {
                 ),
               ),
             ),
-            SizedBox(height: 4.0),
+            const SizedBox(height: 4.0),
             Center(
               child: Opacity(
                 opacity: 0.4,
@@ -150,19 +157,20 @@ class _TestState extends State<Test> {
                 ),
               ),
             ),
-            SizedBox(height: 18.0),
-            Center(
-              child: RaisedButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(100.0)),
-                color: Colors.white,
-                child: Text("Request account access"),
-                onPressed: () async {
-                  (js.context["ethereum"] as js.JsObject)
-                      .callMethod("enable", []);
-                },
+            const SizedBox(height: 18.0),
+            if (hasEthereum.isActive)
+              Center(
+                child: RaisedButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(100.0)),
+                  color: Colors.white,
+                  child: const Text("Request account access"),
+                  onPressed: () async {
+                    (js.context["ethereum"] as js.JsObject)
+                        .callMethod("enable", <dynamic>[]);
+                  },
+                ),
               ),
-            ),
             if (this.account.hasValue)
               Builder(builder: (context) {
                 return Center(
@@ -174,20 +182,22 @@ class _TestState extends State<Test> {
                     onPressed: () async {
                       print(this.account.valueOrNull);
                       (js.context["web3"]["eth"] as js.JsObject)
-                          .callMethod("getBalance", [
+                          .callMethod("getBalance", <dynamic>[
                         this.account.valueOrNull,
                         'latest',
                         js.allowInterop((dynamic err, dynamic wei) {
                           final balance =
                               optionOf(Decimal.tryParse(wei.toString())).map(
-                                      (a) => (a / Decimal.fromInt(10).pow(18))
-                                          .toString() + " ETH") |
+                                      (a) =>
+                                          (a / Decimal.fromInt(10).pow(18))
+                                              .toString() +
+                                          " ETH") |
                                   "Unknown";
-                          showDialog(
+                          showDialog<dynamic>(
                             context: context,
                             builder: (context) {
                               return AlertDialog(
-                                title: Text("Balance"),
+                                title: const Text("Balance"),
                                 content: Text("$balance"),
                               );
                             },
