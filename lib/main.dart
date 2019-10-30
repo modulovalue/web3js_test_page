@@ -61,16 +61,27 @@ class _TestState extends State<Test> {
       }
 
       /// check network id
-      (js.context["web3"]["version"] as js.JsObject)
-          .callMethod("getNetwork", <dynamic>[
-        js.allowInterop((dynamic err, dynamic netID) {
-          if (!this.netID.hasValue ||
-              this.netID.valueOrNull != netID.toString()) {
-            setState(() =>
-                this.netID = some(MapEntry(DateTime.now(), netID.toString())));
-          }
-        }),
-      ]);
+      try {
+        js.context["web3"]["eth"]["net"].callMethod("getNetworkType", <dynamic>[
+          js.allowInterop((dynamic netID) {
+            if (!this.netID.hasValue ||
+                this.netID.valueOrNull != netID.toString()) {
+              setState(() => this.netID =
+                  some(MapEntry(DateTime.now(), netID.toString())));
+            }
+          }),
+        ]);
+      } catch (e) {
+        js.context["web3"]["version"].callMethod("getNetwork", <dynamic>[
+          js.allowInterop((dynamic err, dynamic netID) {
+            if (!this.netID.hasValue ||
+                this.netID.valueOrNull != netID.toString()) {
+              setState(() => this.netID =
+                  some(MapEntry(DateTime.now(), netID.toString())));
+            }
+          }),
+        ]);
+      }
 
       /// get account
       final arr = js.context["web3"]["eth"]["accounts"] as js.JsArray;
@@ -199,16 +210,24 @@ class _TestState extends State<Test> {
 
 String network(String id) {
   switch (id) {
+    case "main":
+      return 'Mainnet';
     case "1":
       return 'Mainnet';
+    case "morden":
+      return 'Test: Morden';
     case "2":
       return 'Test: Morden';
+    case "ropsten":
+      return 'Test: Ropsten';
     case "3":
       return 'Test: Ropsten';
     case "4":
       return 'Test: Rinkeby';
     case "42":
       return 'Test: Kovan';
+    case "private":
+      return 'Unknown network';
     default:
       return 'Unknown network';
   }
