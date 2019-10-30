@@ -27,71 +27,70 @@ class Test extends StatefulWidget {
   _TestState createState() => _TestState();
 }
 
-extension OptionMapEntryBool on Option<MapEntry<DateTime, bool>> {
-  bool get isActive => this.map((a) => a.value) | false;
+extension OptionMapEntryBool on Option<bool> {
+  bool get isActive => this | false;
 }
 
-extension OptionMapEntryString on Option<MapEntry<DateTime, String>> {
-  bool get hasValue => this.map((a) => a.value != null) | false;
+extension OptionMapEntryString on Option<String> {
+  bool get hasValue => this.map((a) => a != null) | false;
 
-  String get valueOrNull => this.map((a) => a.value) | null;
+  String get valueOrNull => this | null;
 }
 
 class _TestState extends State<Test> {
-  Option<MapEntry<DateTime, bool>> hasEthereum = none();
-  Option<MapEntry<DateTime, bool>> hasWeb3 = none();
-  Option<MapEntry<DateTime, String>> netID = none();
-  Option<MapEntry<DateTime, String>> account = none();
+  Option<bool> hasEthereum = none();
+  Option<bool> hasWeb3 = none();
+  Option<String> netID = none();
+  Option<String> account = none();
 
   @override
   void initState() {
     super.initState();
 
     Timer.periodic(const Duration(seconds: 1), (timer) {
-//      /// check ethereum.js
-//      if (js.context.hasProperty("ethereum") != hasEthereum.isActive) {
-//        setState(() => hasEthereum =
-//            some(MapEntry(DateTime.now(), js.context.hasProperty("ethereum"))));
-//      }
-//
-//      /// check web3.js
-//      if (js.context.hasProperty("web3") != hasWeb3.isActive) {
-//        setState(() => hasWeb3 =
-//            some(MapEntry(DateTime.now(), js.context.hasProperty("web3"))));
-//      }
+      /// check ethereum.js
+      if (js.context.hasProperty("ethereum") != hasEthereum.isActive) {
+        setState(() => hasEthereum = some(js.context.hasProperty("ethereum")));
+      }
+
+      /// check web3.js
+      if (js.context.hasProperty("web3") != hasWeb3.isActive) {
+        setState(() => hasWeb3 = some(js.context.hasProperty("web3")));
+      }
 
       /// check network id
-//      try {
-        js.context["web3"]["version"].callMethod("getNetwork", <dynamic>[
-          js.allowInterop((dynamic err, dynamic netID) {
+      try {
+        (js.context["web3"]["version"] as js.JsObject)
+            .callMethod("getNetwork", <dynamic>[
+          (dynamic err, dynamic id) {
             if (!this.netID.hasValue ||
-                this.netID.valueOrNull != netID.toString()) {
-              setState(() => this.netID =
-                  some(MapEntry(DateTime.now(), netID.toString())));
+                this.netID.valueOrNull != id.toString()) {
+              setState(() => this.netID = some(id.toString()));
             }
-          }),
+          },
         ]);
-//      } catch (e) {
-//        js.context["web3"]["eth"]["net"].callMethod("getNetworkType", <dynamic>[
-//          js.allowInterop((dynamic netID) {
-//            if (!this.netID.hasValue ||
-//                this.netID.valueOrNull != netID.toString()) {
-//              setState(() => this.netID =
-//                  some(MapEntry(DateTime.now(), netID.toString())));
-//            }
-//          }),
-//        ]);
-//      }
-//
-//      /// get account
-//      final arr = js.context["web3"]["eth"]["accounts"] as js.JsArray;
-//      if (arr.isNotEmpty) {
-//        final dynamic _account = arr[0];
-//        if (!account.hasValue || _account.toString() != account.valueOrNull) {
-//          setState(() =>
-//              account = some(MapEntry(DateTime.now(), _account.toString())));
-//        }
-//      }
+      } catch (e) {
+        (js.context["web3"]["eth"]["net"] as js.JsObject).callMethod(
+          "getNetworkType",
+          <dynamic>[
+            (dynamic netID) {
+              if (!this.netID.hasValue ||
+                  this.netID.valueOrNull != netID.toString()) {
+                setState(() => this.netID = some(netID.toString()));
+              }
+            }
+          ],
+        );
+      }
+
+      /// get account
+      final arr = js.context["web3"]["eth"]["accounts"] as js.JsArray;
+      if (arr.isNotEmpty) {
+        final dynamic _account = arr[0];
+        if (!account.hasValue || _account.toString() != account.valueOrNull) {
+          setState(() => account = some(_account.toString()));
+        }
+      }
     });
   }
 
@@ -138,8 +137,7 @@ class _TestState extends State<Test> {
                 child: Wrap(
                   spacing: 4.0,
                   children: <Widget>[
-                    Text(
-                        "Network: ${netID.map((a) => a.value).map(network) | "?"}"),
+                    Text("Network: ${netID.map(network) | "?"}"),
                   ],
                 ),
               ),
@@ -158,18 +156,18 @@ class _TestState extends State<Test> {
             ),
             const SizedBox(height: 18.0),
 //            if (hasEthereum.isActive)
-              Center(
-                child: RaisedButton(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(100.0)),
-                  color: Colors.white,
-                  child: const Text("Request account access"),
-                  onPressed: () async {
-                    (js.context["ethereum"] as js.JsObject)
-                        .callMethod("enable", <dynamic>[]);
-                  },
-                ),
+            Center(
+              child: RaisedButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(100.0)),
+                color: Colors.white,
+                child: const Text("Request account access"),
+                onPressed: () async {
+                  (js.context["ethereum"] as js.JsObject)
+                      .callMethod("enable", <dynamic>[]);
+                },
               ),
+            ),
             if (this.account.hasValue)
               Builder(builder: (context) {
                 return Center(
@@ -183,7 +181,7 @@ class _TestState extends State<Test> {
                           .callMethod("getBalance", <dynamic>[
                         this.account.valueOrNull,
                         'latest',
-                        js.allowInterop((dynamic err, dynamic wei) {
+                        (dynamic err, dynamic wei) {
                           final balance =
                               optionOf(Decimal.tryParse(wei.toString()))
                                       .map((a) {
@@ -195,7 +193,7 @@ class _TestState extends State<Test> {
                           Scaffold.of(context).showSnackBar(SnackBar(
                             content: Text("Balance: $balance"),
                           ));
-                        }),
+                        },
                       ]);
                     },
                   ),
