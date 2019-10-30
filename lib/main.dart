@@ -48,30 +48,20 @@ class _TestState extends State<Test> {
     super.initState();
 
     Timer.periodic(const Duration(seconds: 1), (timer) {
-      /// check ethereum.js
-      if (js.context.hasProperty("ethereum") != hasEthereum.isActive) {
-        setState(() => hasEthereum =
-            some(MapEntry(DateTime.now(), js.context.hasProperty("ethereum"))));
-      }
-
-      /// check web3.js
-      if (js.context.hasProperty("web3") != hasWeb3.isActive) {
-        setState(() => hasWeb3 =
-            some(MapEntry(DateTime.now(), js.context.hasProperty("web3"))));
-      }
+//      /// check ethereum.js
+//      if (js.context.hasProperty("ethereum") != hasEthereum.isActive) {
+//        setState(() => hasEthereum =
+//            some(MapEntry(DateTime.now(), js.context.hasProperty("ethereum"))));
+//      }
+//
+//      /// check web3.js
+//      if (js.context.hasProperty("web3") != hasWeb3.isActive) {
+//        setState(() => hasWeb3 =
+//            some(MapEntry(DateTime.now(), js.context.hasProperty("web3"))));
+//      }
 
       /// check network id
-      try {
-        js.context["web3"]["eth"]["net"].callMethod("getNetworkType", <dynamic>[
-          js.allowInterop((dynamic netID) {
-            if (!this.netID.hasValue ||
-                this.netID.valueOrNull != netID.toString()) {
-              setState(() => this.netID =
-                  some(MapEntry(DateTime.now(), netID.toString())));
-            }
-          }),
-        ]);
-      } catch (e) {
+//      try {
         js.context["web3"]["version"].callMethod("getNetwork", <dynamic>[
           js.allowInterop((dynamic err, dynamic netID) {
             if (!this.netID.hasValue ||
@@ -81,17 +71,27 @@ class _TestState extends State<Test> {
             }
           }),
         ]);
-      }
-
-      /// get account
-      final arr = js.context["web3"]["eth"]["accounts"] as js.JsArray;
-      if (arr.isNotEmpty) {
-        final dynamic _account = arr[0];
-        if (!account.hasValue || _account.toString() != account.valueOrNull) {
-          setState(() =>
-              account = some(MapEntry(DateTime.now(), _account.toString())));
-        }
-      }
+//      } catch (e) {
+//        js.context["web3"]["eth"]["net"].callMethod("getNetworkType", <dynamic>[
+//          js.allowInterop((dynamic netID) {
+//            if (!this.netID.hasValue ||
+//                this.netID.valueOrNull != netID.toString()) {
+//              setState(() => this.netID =
+//                  some(MapEntry(DateTime.now(), netID.toString())));
+//            }
+//          }),
+//        ]);
+//      }
+//
+//      /// get account
+//      final arr = js.context["web3"]["eth"]["accounts"] as js.JsArray;
+//      if (arr.isNotEmpty) {
+//        final dynamic _account = arr[0];
+//        if (!account.hasValue || _account.toString() != account.valueOrNull) {
+//          setState(() =>
+//              account = some(MapEntry(DateTime.now(), _account.toString())));
+//        }
+//      }
     });
   }
 
@@ -157,7 +157,7 @@ class _TestState extends State<Test> {
               ),
             ),
             const SizedBox(height: 18.0),
-            if (hasEthereum.isActive)
+//            if (hasEthereum.isActive)
               Center(
                 child: RaisedButton(
                   shape: RoundedRectangleBorder(
