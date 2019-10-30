@@ -168,28 +168,22 @@ class _TestState extends State<Test> {
                     color: Colors.white,
                     child: Text("Get Balance for ${this.account.valueOrNull}"),
                     onPressed: () async {
-                      print(this.account.valueOrNull);
                       (js.context["web3"]["eth"] as js.JsObject)
                           .callMethod("getBalance", <dynamic>[
                         this.account.valueOrNull,
                         'latest',
                         js.allowInterop((dynamic err, dynamic wei) {
                           final balance =
-                              optionOf(Decimal.tryParse(wei.toString())).map(
-                                      (a) =>
-                                          (a / Decimal.fromInt(10).pow(18))
-                                              .toString() +
-                                          " ETH") |
+                              optionOf(Decimal.tryParse(wei.toString()))
+                                      .map((a) {
+                                    return (a / Decimal.fromInt(10).pow(18))
+                                            .toString() +
+                                        " ETH";
+                                  }) |
                                   "Unknown";
-                          showDialog<dynamic>(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text("Balance"),
-                                content: Text("$balance"),
-                              );
-                            },
-                          );
+                          Scaffold.of(context).showSnackBar(SnackBar(
+                            content: Text("Balance: $balance"),
+                          ));
                         }),
                       ]);
                     },
