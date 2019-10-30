@@ -104,6 +104,15 @@ class _TestState extends State<Test> {
             ...modulovalueTitle("Web3.js Test Page", "web3js_test_page"),
             const SizedBox(height: 36.0),
             Center(
+              child: Text(
+                hasEthereum.isActive || hasWeb3.isActive
+                    ? "Your browser supports Web3"
+                    : "Your browser doesn't support Web3. \nPlease install MetaMask or a Web 3 capable browser.",
+                textAlign: TextAlign.center,
+              ),
+            ),
+            const SizedBox(height: 8.0),
+            Center(
               child: Opacity(
                 opacity: 0.4,
                 child: Wrap(
@@ -155,19 +164,19 @@ class _TestState extends State<Test> {
               ),
             ),
             const SizedBox(height: 18.0),
-//            if (hasEthereum.isActive)
-            Center(
-              child: RaisedButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(100.0)),
-                color: Colors.white,
-                child: const Text("Request account access"),
-                onPressed: () async {
-                  (js.context["ethereum"] as js.JsObject)
-                      .callMethod("enable", <dynamic>[]);
-                },
+            if (hasEthereum.isActive)
+              Center(
+                child: RaisedButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(100.0)),
+                  color: Colors.white,
+                  child: const Text("Request account access"),
+                  onPressed: () async {
+                    (js.context["ethereum"] as js.JsObject)
+                        .callMethod("enable", <dynamic>[]);
+                  },
+                ),
               ),
-            ),
             if (this.account.hasValue)
               Builder(builder: (context) {
                 return Center(
