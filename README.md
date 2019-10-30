@@ -4,4 +4,4 @@
 
 [web3js_test_page](https://modulovalue.com/web3js_test_page) (Please use a web3 capable Browser or have MetaMask installed)
 
-![Screenshot](assets/screenshot1.jpg)
+![Screenshot](assets/screenshots1.png)
