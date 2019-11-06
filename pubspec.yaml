@@ -8,12 +8,17 @@ dependencies:
   flutter:
     sdk: flutter
   web3dart: ^1.2.1
-  dartz: ^0.8.7
   modulovalue_project_widgets:
     git:
       url: git://github.com/modulovalue/modulovalue_project_widgets.git
       ref: 19d34e2be61bd27f57d4df979fcc1cb83779ee38
   decimal: ^0.3.5
+  # https://github.com/modulovalue/bird
+  bird_flutter:
+    path: bird/bird_flutter/code
+  # https://github.com/modulovalue/bird
+  bird:
+    path: bird/bird/code
 
 dev_dependencies:
   flutter_test:
